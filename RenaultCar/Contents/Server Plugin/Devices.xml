@@ -1,0 +1,331 @@
+<?xml version="1.0"?>
+<Devices>
+    <!-- Renault Account Device - stores credentials and manages API connection -->
+    <Device type="custom" id="renaultAccount">
+        <Name>Renault Account</Name>
+        <ConfigUI>
+            <Field id="email" type="textfield">
+                <Label>Email Address:</Label>
+            </Field>
+            <Field id="password" type="textfield" secure="true">
+                <Label>Password:</Label>
+            </Field>
+            <Field id="locale" type="menu" defaultValue="en_GB">
+                <Label>Country/Locale:</Label>
+                <List>
+                    <Option value="en_GB">United Kingdom (en_GB)</Option>
+                    <Option value="fr_FR">France (fr_FR)</Option>
+                    <Option value="de_DE">Germany (de_DE)</Option>
+                    <Option value="es_ES">Spain (es_ES)</Option>
+                    <Option value="it_IT">Italy (it_IT)</Option>
+                    <Option value="nl_NL">Netherlands (nl_NL)</Option>
+                    <Option value="sv_SE">Sweden (sv_SE)</Option>
+                    <Option value="da_DK">Denmark (da_DK)</Option>
+                    <Option value="no_NO">Norway (no_NO)</Option>
+                    <Option value="pt_PT">Portugal (pt_PT)</Option>
+                    <Option value="pl_PL">Poland (pl_PL)</Option>
+                    <Option value="cs_CZ">Czech Republic (cs_CZ)</Option>
+                    <Option value="ro_RO">Romania (ro_RO)</Option>
+                    <Option value="hu_HU">Hungary (hu_HU)</Option>
+                    <Option value="sk_SK">Slovakia (sk_SK)</Option>
+                    <Option value="sl_SI">Slovenia (sl_SI)</Option>
+                    <Option value="hr_HR">Croatia (hr_HR)</Option>
+                    <Option value="bg_BG">Bulgaria (bg_BG)</Option>
+                    <Option value="en_IE">Ireland (en_IE)</Option>
+                    <Option value="fi_FI">Finland (fi_FI)</Option>
+                    <Option value="en_AU">Australia (en_AU)</Option>
+                    <Option value="en_NZ">New Zealand (en_NZ)</Option>
+                </List>
+            </Field>
+            <Field id="separator1" type="separator"/>
+            <Field id="accountLabel" type="label">
+                <Label>After saving, the plugin will attempt to connect and retrieve your account ID.</Label>
+            </Field>
+        </ConfigUI>
+        <States>
+            <State id="accountId">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Account ID</TriggerLabel>
+                <ControlPageLabel>Account ID</ControlPageLabel>
+            </State>
+            <State id="connectionStatus">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Connection Status</TriggerLabel>
+                <ControlPageLabel>Connection Status</ControlPageLabel>
+            </State>
+            <State id="lastLogin">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Login</TriggerLabel>
+                <ControlPageLabel>Last Login</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>connectionStatus</UiDisplayStateId>
+    </Device>
+
+    <!-- Renault Vehicle Device - main device showing all vehicle states -->
+    <Device type="sensor" id="renaultVehicle">
+        <Name>Renault Vehicle</Name>
+        <ConfigUI>
+            <Field id="accountDevice" type="menu">
+                <Label>Renault Account:</Label>
+                <List class="self" filter="" method="getAccountDevices" dynamicReload="true"/>
+                <CallbackMethod>accountDeviceChanged</CallbackMethod>
+            </Field>
+            <Field id="vin" type="menu">
+                <Label>Vehicle (VIN):</Label>
+                <List class="self" filter="" method="getVehiclesForAccount" dynamicReload="true"/>
+            </Field>
+            <Field id="separator1" type="separator"/>
+            <Field id="updateInterval" type="textfield" defaultValue="10">
+                <Label>Update Interval (minutes):</Label>
+            </Field>
+            <Field id="distanceUnit" type="menu" defaultValue="km">
+                <Label>Distance Unit:</Label>
+                <List>
+                    <Option value="km">Kilometers</Option>
+                    <Option value="miles">Miles</Option>
+                </List>
+            </Field>
+            <Field id="temperatureUnit" type="menu" defaultValue="C">
+                <Label>Temperature Unit:</Label>
+                <List>
+                    <Option value="C">Celsius</Option>
+                    <Option value="F">Fahrenheit</Option>
+                </List>
+            </Field>
+            <Field id="separator2" type="separator"/>
+            <Field id="verboseLogging" type="checkbox" defaultValue="false">
+                <Label>Verbose Logging:</Label>
+                <Description>Show detailed API response data in Event Log</Description>
+            </Field>
+            <Field id="SupportsSensorValue" type="checkbox" hidden="true" defaultValue="true">
+                <Label/>
+            </Field>
+            <Field id="SupportsOnState" type="checkbox" hidden="true" defaultValue="false">
+                <Label/>
+            </Field>
+        </ConfigUI>
+        <States>
+            <!-- Main sensor value - battery level -->
+            <State id="sensorValue">
+                <ValueType>
+                    <Type>Float</Type>
+                    <MinValue>0</MinValue>
+                    <MaxValue>100</MaxValue>
+                </ValueType>
+                <TriggerLabel>Battery Level (%)</TriggerLabel>
+                <ControlPageLabel>Battery %</ControlPageLabel>
+            </State>
+            <State id="displayStateImageSel">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Display State</TriggerLabel>
+                <ControlPageLabel>Display State</ControlPageLabel>
+            </State>
+            
+            <!-- Alphabetically ordered custom states -->
+            <State id="batteryAutonomy">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Battery Range</TriggerLabel>
+                <ControlPageLabel>Battery Range</ControlPageLabel>
+            </State>
+            <State id="batteryAutonomyString">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Battery Range (String)</TriggerLabel>
+                <ControlPageLabel>Battery Range (String)</ControlPageLabel>
+            </State>
+            <State id="batteryAvailableEnergy">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Available Energy (kWh)</TriggerLabel>
+                <ControlPageLabel>Available Energy</ControlPageLabel>
+            </State>
+            <State id="batteryLevel">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Battery Level (%)</TriggerLabel>
+                <ControlPageLabel>Battery Level</ControlPageLabel>
+            </State>
+            <State id="batteryLevelInt">
+                <ValueType>Integer</ValueType>
+                <TriggerLabel>Battery Level (Integer)</TriggerLabel>
+                <ControlPageLabel>Battery Level Int</ControlPageLabel>
+            </State>
+            <State id="batteryLevelString">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Battery Level (String)</TriggerLabel>
+                <ControlPageLabel>Battery Level (String)</ControlPageLabel>
+            </State>
+            <State id="batteryTemperature">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Battery Temperature</TriggerLabel>
+                <ControlPageLabel>Battery Temperature</ControlPageLabel>
+            </State>
+            <State id="chargingMode">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Charging Mode</TriggerLabel>
+                <ControlPageLabel>Charging Mode</ControlPageLabel>
+            </State>
+            <State id="chargingPower">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Charging Power (kW)</TriggerLabel>
+                <ControlPageLabel>Charging Power</ControlPageLabel>
+            </State>
+            <State id="chargingRemainingTime">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Charging Time Remaining (min)</TriggerLabel>
+                <ControlPageLabel>Time Remaining</ControlPageLabel>
+            </State>
+            <State id="chargingStatus">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Charging Status</TriggerLabel>
+                <ControlPageLabel>Charging Status</ControlPageLabel>
+            </State>
+            <State id="chargingStatusCP">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Charging Status (Control Page)</TriggerLabel>
+                <ControlPageLabel>Charging Status (CP)</ControlPageLabel>
+            </State>
+            <State id="chargingStatusRAW">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Charging Status (Raw API)</TriggerLabel>
+                <ControlPageLabel>Charging Status (Raw)</ControlPageLabel>
+            </State>
+            <State id="externalTemperature">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>External Temperature</TriggerLabel>
+                <ControlPageLabel>External Temperature</ControlPageLabel>
+            </State>
+            <State id="hvacSocThreshold">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>HVAC SoC Threshold</TriggerLabel>
+                <ControlPageLabel>HVAC SoC Threshold</ControlPageLabel>
+            </State>
+            <State id="hvacStatus">
+                <ValueType>String</ValueType>
+                <TriggerLabel>HVAC Status</TriggerLabel>
+                <ControlPageLabel>HVAC Status</ControlPageLabel>
+            </State>
+            <State id="latitude">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Latitude</TriggerLabel>
+                <ControlPageLabel>Latitude</ControlPageLabel>
+            </State>
+            <State id="longitude">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Longitude</TriggerLabel>
+                <ControlPageLabel>Longitude</ControlPageLabel>
+            </State>
+            <State id="modelName">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Model Name</TriggerLabel>
+                <ControlPageLabel>Model</ControlPageLabel>
+            </State>
+            <State id="odometer">
+                <ValueType>Number</ValueType>
+                <TriggerLabel>Odometer</TriggerLabel>
+                <ControlPageLabel>Odometer</ControlPageLabel>
+            </State>
+            <State id="plugStatus">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Plug Status</TriggerLabel>
+                <ControlPageLabel>Plug Status</ControlPageLabel>
+            </State>
+            <State id="registrationNumber">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Registration Number</TriggerLabel>
+                <ControlPageLabel>Registration</ControlPageLabel>
+            </State>
+            
+            <!-- Last Update - prefixed with 'z' to force it to bottom of alphabetical list -->
+            <State id="zLastUpdate">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Update</TriggerLabel>
+                <ControlPageLabel>Last Update</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>displayStateImageSel</UiDisplayStateId>
+    </Device>
+
+    <!-- Charge Start Relay - momentary action to start charging -->
+    <Device type="relay" id="renaultChargeStart">
+        <Name>Renault Charge Start</Name>
+        <ConfigUI>
+            <Field id="vehicleDevice" type="menu">
+                <Label>Vehicle Device:</Label>
+                <List class="self" filter="" method="getVehicleDevices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <States>
+            <State id="onOffState">
+                <ValueType boolType="OnOff">Boolean</ValueType>
+                <TriggerLabel>State</TriggerLabel>
+                <ControlPageLabel>State</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>onOffState</UiDisplayStateId>
+    </Device>
+
+    <!-- Charge Stop Relay - momentary action to stop charging -->
+    <Device type="relay" id="renaultChargeStop">
+        <Name>Renault Charge Stop</Name>
+        <ConfigUI>
+            <Field id="vehicleDevice" type="menu">
+                <Label>Vehicle Device:</Label>
+                <List class="self" filter="" method="getVehicleDevices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <States>
+            <State id="onOffState">
+                <ValueType boolType="OnOff">Boolean</ValueType>
+                <TriggerLabel>State</TriggerLabel>
+                <ControlPageLabel>State</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>onOffState</UiDisplayStateId>
+    </Device>
+
+    <!-- Pre-conditioning Relay - momentary action to start HVAC -->
+    <Device type="relay" id="renaultPreconditioning">
+        <Name>Renault Pre-conditioning</Name>
+        <ConfigUI>
+            <Field id="vehicleDevice" type="menu">
+                <Label>Vehicle Device:</Label>
+                <List class="self" filter="" method="getVehicleDevices" dynamicReload="true"/>
+            </Field>
+            <Field id="targetTemperature" type="textfield" defaultValue="21">
+                <Label>Target Temperature (°C):</Label>
+            </Field>
+            <Field id="tempNote" type="label">
+                <Label>Note: Some vehicles only support 19, 20, or 21°C</Label>
+            </Field>
+        </ConfigUI>
+        <States>
+            <State id="onOffState">
+                <ValueType boolType="OnOff">Boolean</ValueType>
+                <TriggerLabel>State</TriggerLabel>
+                <ControlPageLabel>State</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>onOffState</UiDisplayStateId>
+    </Device>
+
+    <!-- Charge Mode Relay - toggle between always charging and schedule mode -->
+    <Device type="relay" id="renaultChargeMode">
+        <Name>Renault Charge Mode</Name>
+        <ConfigUI>
+            <Field id="vehicleDevice" type="menu">
+                <Label>Vehicle Device:</Label>
+                <List class="self" filter="" method="getVehicleDevices" dynamicReload="true"/>
+            </Field>
+            <Field id="modeNote" type="label">
+                <Label>ON = Always Charging (Instant), OFF = Schedule Mode</Label>
+            </Field>
+        </ConfigUI>
+        <States>
+            <State id="onOffState">
+                <ValueType boolType="OnOff">Boolean</ValueType>
+                <TriggerLabel>State</TriggerLabel>
+                <ControlPageLabel>State</ControlPageLabel>
+            </State>
+        </States>
+        <UiDisplayStateId>onOffState</UiDisplayStateId>
+    </Device>
+</Devices>

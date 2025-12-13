@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<Actions>
+    <!-- Start Charging Action -->
+    <Action id="startCharging" deviceFilter="self.renaultVehicle">
+        <Name>Start Charging</Name>
+        <CallbackMethod>actionStartCharging</CallbackMethod>
+    </Action>
+
+    <!-- Stop Charging Action -->
+    <Action id="stopCharging" deviceFilter="self.renaultVehicle">
+        <Name>Stop Charging</Name>
+        <CallbackMethod>actionStopCharging</CallbackMethod>
+    </Action>
+
+    <!-- Start Pre-conditioning Action -->
+    <Action id="startPreconditioning" deviceFilter="self.renaultVehicle">
+        <Name>Start Pre-conditioning</Name>
+        <CallbackMethod>actionStartPreconditioning</CallbackMethod>
+        <ConfigUI>
+            <Field id="targetTemperature" type="textfield" defaultValue="21">
+                <Label>Target Temperature (°C):</Label>
+            </Field>
+            <Field id="tempNote" type="label">
+                <Label>Note: Some vehicles only support 19, 20, or 21°C</Label>
+            </Field>
+        </ConfigUI>
+    </Action>
+
+    <!-- Set Charge Mode Action -->
+    <Action id="setChargeMode" deviceFilter="self.renaultVehicle">
+        <Name>Set Charge Mode</Name>
+        <CallbackMethod>actionSetChargeMode</CallbackMethod>
+        <ConfigUI>
+            <Field id="chargeMode" type="menu" defaultValue="always_charging">
+                <Label>Charge Mode:</Label>
+                <List>
+                    <Option value="always_charging">Always Charging (Instant)</Option>
+                    <Option value="schedule_mode">Schedule Mode</Option>
+                </List>
+            </Field>
+        </ConfigUI>
+    </Action>
+
+    <!-- Set Charge Schedule Action -->
+    <Action id="setChargeSchedule" deviceFilter="self.renaultVehicle">
+        <Name>Set Charge Schedule</Name>
+        <CallbackMethod>actionSetChargeSchedule</CallbackMethod>
+        <ConfigUI>
+            <Field id="scheduleId" type="menu" defaultValue="1">
+                <Label>Schedule ID:</Label>
+                <List>
+                    <Option value="1">Schedule 1</Option>
+                    <Option value="2">Schedule 2</Option>
+                    <Option value="3">Schedule 3</Option>
+                    <Option value="4">Schedule 4</Option>
+                </List>
+            </Field>
+            <Field id="activated" type="checkbox" defaultValue="true">
+                <Label>Activated:</Label>
+            </Field>
+            <Field id="separator1" type="separator"/>
+            <Field id="useAllDays" type="checkbox" defaultValue="false">
+                <Label>Use same time for all days:</Label>
+            </Field>
+            <Field id="allDaysStart" type="textfield" defaultValue="23:00" visibleBindingId="useAllDays" visibleBindingValue="true">
+                <Label>Start Time (HH:MM):</Label>
+            </Field>
+            <Field id="allDaysDuration" type="textfield" defaultValue="480" visibleBindingId="useAllDays" visibleBindingValue="true">
+                <Label>Duration (minutes):</Label>
+            </Field>
+            <Field id="separator2" type="separator" visibleBindingId="useAllDays" visibleBindingValue="false"/>
+            <Field id="monday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Monday:</Label>
+            </Field>
+            <Field id="mondayStart" type="textfield" defaultValue="23:00" visibleBindingId="monday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="mondayDuration" type="textfield" defaultValue="480" visibleBindingId="monday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+            <Field id="tuesday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Tuesday:</Label>
+            </Field>
+            <Field id="tuesdayStart" type="textfield" defaultValue="23:00" visibleBindingId="tuesday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="tuesdayDuration" type="textfield" defaultValue="480" visibleBindingId="tuesday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+            <Field id="wednesday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Wednesday:</Label>
+            </Field>
+            <Field id="wednesdayStart" type="textfield" defaultValue="23:00" visibleBindingId="wednesday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="wednesdayDuration" type="textfield" defaultValue="480" visibleBindingId="wednesday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+            <Field id="thursday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Thursday:</Label>
+            </Field>
+            <Field id="thursdayStart" type="textfield" defaultValue="23:00" visibleBindingId="thursday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="thursdayDuration" type="textfield" defaultValue="480" visibleBindingId="thursday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+            <Field id="friday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Friday:</Label>
+            </Field>
+            <Field id="fridayStart" type="textfield" defaultValue="23:00" visibleBindingId="friday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="fridayDuration" type="textfield" defaultValue="480" visibleBindingId="friday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+            <Field id="saturday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Saturday:</Label>
+            </Field>
+            <Field id="saturdayStart" type="textfield" defaultValue="23:00" visibleBindingId="saturday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="saturdayDuration" type="textfield" defaultValue="480" visibleBindingId="saturday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+            <Field id="sunday" type="checkbox" defaultValue="false" visibleBindingId="useAllDays" visibleBindingValue="false">
+                <Label>Sunday:</Label>
+            </Field>
+            <Field id="sundayStart" type="textfield" defaultValue="23:00" visibleBindingId="sunday" visibleBindingValue="true">
+                <Label>  Start Time:</Label>
+            </Field>
+            <Field id="sundayDuration" type="textfield" defaultValue="480" visibleBindingId="sunday" visibleBindingValue="true">
+                <Label>  Duration (min):</Label>
+            </Field>
+        </ConfigUI>
+    </Action>
+
+    <!-- Refresh Vehicle Data Action -->
+    <Action id="refreshVehicleData" deviceFilter="self.renaultVehicle">
+        <Name>Refresh Vehicle Data</Name>
+        <CallbackMethod>actionRefreshVehicleData</CallbackMethod>
+    </Action>
+
+    <!-- Request Battery Refresh Action -->
+    <Action id="requestBatteryRefresh" deviceFilter="self.renaultVehicle">
+        <Name>Request Battery Refresh</Name>
+        <CallbackMethod>actionRequestBatteryRefresh</CallbackMethod>
+    </Action>
+</Actions>
